@@ -27,6 +27,18 @@ const NewIssuePage = () => {
   const [error, setError] = useState("")
   const router = useRouter();  
   const [formSubmit, setformSubmit] = useState(false)
+
+  const onSubmit = handleSubmit( async (data) => {
+    try {  
+      setformSubmit(true);
+      await axios.post('/api/issues', data)
+      router.push('/issue'); // redirecting to issue page 
+    } catch (error) {
+      setformSubmit(false);
+      setError("unexpected Error occurs");
+    }
+  }); 
+
   return (
     /* 
     fetching the data from input field and 
@@ -38,16 +50,7 @@ const NewIssuePage = () => {
           <Callout.Text>{error}</Callout.Text>
         </Callout.Root>
       }
-    <form className='space-y-3' onSubmit={ handleSubmit( async (data) => {
-      try {  
-        setformSubmit(true);
-        await axios.post('/api/issues', data)
-        router.push('/issue'); // redirecting to issue page 
-      } catch (error) {
-        setformSubmit(false);
-        setError("unexpected Error occurs");
-      }
-    })}>
+    <form className='space-y-3' onSubmit={onSubmit}>
         <TextField.Root>
             <TextField.Input placeholder='title' {...register('title')} />
         </TextField.Root>
